@@ -98,10 +98,14 @@ class _CalculatorState extends State<Calculator> {
   Widget CustomButton(String buttonText) {
     return InkWell(
       splashColor: Color(0xFF1d2530),
-      onTap: () {},
+      onTap: () {
+        setState(() {
+          handleButton(buttonText);
+        });
+      },
       child: Ink(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: getbgColor(buttonText),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -120,7 +124,7 @@ class _CalculatorState extends State<Calculator> {
                 buttonText,
                 style: TextStyle(
                     fontSize: 24,
-                    color: Colors.black,
+                    color: getColor(buttonText),
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -128,5 +132,36 @@ class _CalculatorState extends State<Calculator> {
         ),
       ),
     );
+  }
+
+  handleButton(String buttonText) {
+    if (buttonText == "AC") {
+      userInput = '';
+      result = '0';
+      return;
+    } else if (buttonText == "C") {
+      if (userInput.isNotEmpty) {
+        userInput = userInput.substring(0, userInput.length - 1);
+        return;
+      }
+    } else {
+      userInput = userInput + buttonText;
+    }
+  }
+
+  getColor(String buttonText) {
+    if (buttonText == "C" || buttonText == "=") {
+      return Color(0xFF3A98B9);
+    } else {
+      return Colors.white.withOpacity(0.7);
+    }
+  }
+
+  getbgColor(String buttonText) {
+    if (buttonText == "AC") {
+      return Color(0xFF3A98B9);
+    } else {
+      return Color(0xff4D455D);
+    }
   }
 }
