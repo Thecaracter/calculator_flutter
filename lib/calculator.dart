@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({Key? key}) : super(key: key);
@@ -58,6 +59,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                   ),
                   Container(
+                    color: Colors.white,
                     padding: EdgeInsets.all(10),
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -142,10 +144,28 @@ class _CalculatorState extends State<Calculator> {
     } else if (buttonText == "C") {
       if (userInput.isNotEmpty) {
         userInput = userInput.substring(0, userInput.length - 1);
-        return;
+      }
+    } else if (buttonText == "=") {
+      result = calculate();
+      userInput = result;
+      if (userInput.endsWith(".0")) {
+        userInput = userInput.replaceAll(".0", "");
+      }
+      if (result.endsWith(".0")) {
+        result = result.replaceAll(".0", "");
       }
     } else {
       userInput = userInput + buttonText;
+    }
+  }
+
+  String calculate() {
+    try {
+      var exp = Parser().parse(userInput);
+      var evaluate = exp.evaluate(EvaluationType.REAL, ContextModel());
+      return evaluate.toString();
+    } catch (e) {
+      return "error";
     }
   }
 
