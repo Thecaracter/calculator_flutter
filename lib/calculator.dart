@@ -59,9 +59,21 @@ class _CalculatorState extends State<Calculator> {
                     ),
                   ),
                   Container(
-                    color: Colors.white,
+                    // color: Color(0xff4D455D),
                     padding: EdgeInsets.all(10),
                     alignment: Alignment.centerRight,
+                    decoration: BoxDecoration(
+                      color: Color(0xff4D455D),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.1),
+                          blurRadius: 4,
+                          spreadRadius: 0.5,
+                          offset: Offset(0, 4),
+                        )
+                      ],
+                    ),
                     child: Text(
                       result,
                       style: TextStyle(
