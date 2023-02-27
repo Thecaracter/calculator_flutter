@@ -15,6 +15,7 @@ class _CalculatorState extends State<Calculator> {
   String userInput = '';
   String result = '0';
   String lastOperator = '';
+  bool hasResult = false;
   List<String> buttonList = [
     "AC",
     "(",
@@ -151,13 +152,21 @@ class _CalculatorState extends State<Calculator> {
     );
   }
 
-  handleButton(String buttonText) {
+  void handleButton(String buttonText) {
     if (buttonText == "AC") {
       userInput = '';
       result = '0';
+      lastOperator = '';
       return;
     } else if (buttonText == "C") {
       if (userInput.isNotEmpty) {
+        String lastChar = userInput.substring(userInput.length - 1);
+        if (lastChar == "+" ||
+            lastChar == "-" ||
+            lastChar == "*" ||
+            lastChar == "/") {
+          lastOperator = '';
+        }
         userInput = userInput.substring(0, userInput.length - 1);
       }
     } else if (buttonText == "=") {
@@ -169,8 +178,27 @@ class _CalculatorState extends State<Calculator> {
       if (result.endsWith(".0")) {
         result = result.replaceAll(".0", "");
       }
+      lastOperator = '';
+    } else if (buttonText == "+" ||
+        buttonText == "-" ||
+        buttonText == "*" ||
+        buttonText == "/") {
+      if (lastOperator.isNotEmpty) {
+        String lastChar = userInput.substring(userInput.length - 1);
+        if (lastChar == "+" ||
+            lastChar == "-" ||
+            lastChar == "*" ||
+            lastChar == "/") {
+          lastOperator = buttonText;
+          userInput = userInput.substring(0, userInput.length - 1) + buttonText;
+          return;
+        }
+      }
+      userInput += buttonText;
+      lastOperator = buttonText;
     } else {
-      userInput = userInput + buttonText;
+      userInput += buttonText;
+      lastOperator = '';
     }
   }
 
@@ -179,7 +207,6 @@ class _CalculatorState extends State<Calculator> {
       var exp = Parser().parse(userInput);
       var evaluate = exp.evaluate(EvaluationType.REAL, ContextModel());
       var result = evaluate.toString();
-
       if (result.contains(".") && result.length > 10) {
         var parts = result.split(".");
         var base = double.parse(parts[0]);
@@ -188,11 +215,9 @@ class _CalculatorState extends State<Calculator> {
         result =
             (base / powResult).toString() + "e" + parts[1].length.toString();
       }
-
       if (result.endsWith(".0")) {
         result = result.substring(0, result.length - 2);
       }
-
       return result;
     } catch (e) {
       return "error";
