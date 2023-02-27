@@ -3,7 +3,7 @@
    <application
         android:label="calculator_dark"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/calculator">
         <activity
             android:name=".MainActivity"
             android:exported="true"
