@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -12,6 +14,7 @@ class Calculator extends StatefulWidget {
 class _CalculatorState extends State<Calculator> {
   String userInput = '';
   String result = '0';
+  String lastOperator = '';
   List<String> buttonList = [
     "AC",
     "(",
@@ -175,7 +178,22 @@ class _CalculatorState extends State<Calculator> {
     try {
       var exp = Parser().parse(userInput);
       var evaluate = exp.evaluate(EvaluationType.REAL, ContextModel());
-      return evaluate.toString();
+      var result = evaluate.toString();
+
+      if (result.contains(".") && result.length > 10) {
+        var parts = result.split(".");
+        var base = double.parse(parts[0]);
+        var exponent = int.parse(parts[1]);
+        var powResult = pow(10, exponent - parts[1].length);
+        result =
+            (base / powResult).toString() + "e" + parts[1].length.toString();
+      }
+
+      if (result.endsWith(".0")) {
+        result = result.substring(0, result.length - 2);
+      }
+
+      return result;
     } catch (e) {
       return "error";
     }
